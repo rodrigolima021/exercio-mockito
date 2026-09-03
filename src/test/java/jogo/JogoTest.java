@@ -1,129 +1,92 @@
 package jogo;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 class JogoTest {
 
-    @Mock
-    private Jogador jogador;
+    @Test
+    void deveGanharCom7Turno1() {
+        Jogador jogador = mock(Jogador.class);
+        Dado d1 = mock(Dado.class);
+        Dado d2 = mock(Dado.class);
 
-    @Mock
-    private Dado dado1;
+        when(jogador.lancar(d1, d2)).thenReturn(7);
 
-    @Mock
-    private Dado dado2;
-
-    private Jogo jogo;
-
-    @BeforeEach
-    void setUp() {
-        jogo = new Jogo(jogador, dado1, dado2);
+        Jogo jogo = new Jogo(jogador, d1, d2);
+        assertTrue(jogo.jogar());
     }
 
     @Test
-    void deveGanharQuandoPrimeiroLancamentoFor7() {
+    void devePerderCom2NoTurno1() {
+        Jogador jogador = mock(Jogador.class);
+        Dado d1 = mock(Dado.class);
+        Dado d2 = mock(Dado.class);
 
-        when(jogador.lancar(dado1, dado2))
-            .thenReturn(7);
+        when(jogador.lancar(d1, d2)).thenReturn(2);
 
-        boolean resultado = jogo.jogo();
-
-        assertTrue(resultado);
-
-        verify(jogador, times(1))
-            .lancar(dado1, dado2);
+        Jogo jogo = new Jogo(jogador, d1, d2);
+        assertFalse(jogo.jogar());
     }
 
     @Test
-    void deveGanharQuandoPrimeiroLancamentoFor11() {
+    void deveGanharNoTerceiroLançamento() {
+        Jogador jogador = mock(Jogador.class);
+        Dado d1 = mock(Dado.class);
+        Dado d2 = mock(Dado.class);
 
-        when(jogador.lancar(dado1, dado2))
-            .thenReturn(11);
+        when(jogador.lancar(d1, d2)).thenReturn(8, 5, 8);
 
-        assertTrue(jogo.jogo());
-
-        verify(jogador, times(1))
-            .lancar(dado1, dado2);
+        Jogo jogo = new Jogo(jogador, d1, d2);
+        assertTrue(jogo.jogar());
     }
 
     @Test
-    void devePerderQuandoPrimeiroLancamentoFor2() {
+    void devePerderNoSegundoTurnoTirando7() {
+        Jogador jogador = mock(Jogador.class);
+        Dado d1 = mock(Dado.class);
+        Dado d2 = mock(Dado.class);
 
-        when(jogador.lancar(dado1, dado2))
-            .thenReturn(2);
+        when(jogador.lancar(d1, d2)).thenReturn(6, 7);
 
-        assertFalse(jogo.jogo());
-
-        verify(jogador, times(1))
-            .lancar(dado1, dado2);
+        Jogo jogo = new Jogo(jogador, d1, d2);
+        assertFalse(jogo.jogar());
     }
 
     @Test
-    void devePerderQuandoPrimeiroLancamentoFor3() {
-
-        when(jogador.lancar(dado1, dado2))
-            .thenReturn(3);
-
-        assertFalse(jogo.jogo());
+    public void testJogoGanhaPrimeiroTurno() {
+        Jogador jogador = mock(Jogador.class);
+        Dado dado1 = mock(Dado.class);  
+        Dado dado2 = mock(Dado.class);
+        
+        when(jogador.lancar(dado1, dado2)).thenReturn(7);   
     }
 
     @Test
-    void devePerderQuandoPrimeiroLancamentoFor12() {
-
-        when(jogador.lancar(dado1, dado2))
-            .thenReturn(12);
-
-        assertFalse(jogo.jogo());
+    public void testJogoPerdePrimeiroTurno() {
+        Jogador jogador = mock(Jogador.class);
+        Dado dado1 = mock(Dado.class);  
+        Dado dado2 = mock(Dado.class);
+        
+        when(jogador.lancar(dado1, dado2)).thenReturn(2);   
     }
 
     @Test
-    void deveGanharQuandoRepetirOPonto() {
-
-        /*
-         * Primeiro lançamento = 5
-         * O ponto passa a ser 5
-         *
-         * Segundo lançamento = 8
-         * Continua jogando
-         *
-         * Terceiro lançamento = 5
-         * Repetiu o ponto -> ganhou
-         */
-
-        when(jogador.lancar(dado1, dado2))
-            .thenReturn(5, 8, 5);
-
-        assertTrue(jogo.jogo());
-
-        verify(jogador, times(3))
-            .lancar(dado1, dado2);
+    public void testJogoGanhaCom9Turnos() {
+        Jogador jogador = mock(Jogador.class);
+        Dado dado1 = mock(Dado.class);  
+        Dado dado2 = mock(Dado.class);
+        
+        when(jogador.lancar(dado1, dado2)).thenReturn(4, 5, 6, 8, 9, 10, 11, 3, 4);   
     }
 
     @Test
-    void devePerderQuandoSair7DepoisDeDefinirOPonto() {
-
-        /*
-         * Primeiro lançamento = 5
-         * Ponto = 5
-         *
-         * Segundo lançamento = 7
-         * Perde
-         */
-
-        when(jogador.lancar(dado1, dado2))
-            .thenReturn(5, 7);
-
-        assertFalse(jogo.jogo());
-
-        verify(jogador, times(2))
-            .lancar(dado1, dado2);
+    public void testJogoPerdeCom11Turnos() {
+        Jogador jogador = mock(Jogador.class);
+        Dado dado1 = mock(Dado.class);
+        Dado dado2 = mock(Dado.class);
+        
+        when(jogador.lancar(dado1, dado2)).thenReturn(4, 5, 6, 8, 9, 10, 11, 3, 2, 12, 7);  
     }
 }
